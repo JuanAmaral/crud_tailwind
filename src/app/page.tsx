@@ -1,6 +1,6 @@
-import Register from "./register";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Manager from "./manager";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
         theme={"colored"}
         limit={1}
       />
-      <Register />
+      <Manager />
     </main>
   );
 }

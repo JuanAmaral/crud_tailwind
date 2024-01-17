@@ -8,7 +8,7 @@ import pencil from "../../../public/pencil.svg";
 import trash from "../../../public/trash.svg";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
-export default function Register() {
+export default function Manager() {
   const inicialName: IUser = { id: 0, name: "" };
   const [loadingList, setLoadingList] = useState(true);
   const [loadingButton, setLoadingButton] = useState(false);
