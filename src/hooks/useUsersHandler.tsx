@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { getUsers } from "@/api/list";
+import { useUserContext } from "@/context/userContext";
 
 const useUsersHandler = () => {
   const [loadingList, setLoadingList] = useState(true);
-  const [users, setUsers] = useState<IUser[]>([]); // Adicione o tipo IUser[]
+  const { users, setUsers } = useUserContext();
 
   const handleUsers = async () => {
+    //uma promise diferente com o toatify
     const promise = getUsers();
     toast.promise(promise, {
       pending: {
@@ -14,7 +16,9 @@ const useUsersHandler = () => {
       },
       success: {
         render: ({ data }) => {
-          setUsers(data.data);
+          setUsers((prevUsers) => {
+            return [...prevUsers, ...data.data];
+          });
           setLoadingList(false);
           return "Lista de nomes carregada com sucesso!";
         },
@@ -27,10 +31,6 @@ const useUsersHandler = () => {
       },
     });
   };
-
-  useEffect(() => {
-    handleUsers();
-  }, []);
 
   return { loadingList, users, setUsers, handleUsers };
 };

@@ -1,30 +1,30 @@
 "use client";
-import { addUser, deleteUser, editUser, getUsers } from "@/api/list";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 import Image from "next/image";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useEffectOnce } from "usehooks-ts";
 import pencil from "../../../public/pencil.svg";
 import trash from "../../../public/trash.svg";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-import useUsersHandler from "@/hooks/useUsersHandler";
+
+import { useUserContext } from "@/context/userContext";
 import useNewUserHandler from "@/hooks/useNewUserHandler";
 import useRemoveUserHandler from "@/hooks/useRemoveUserHandler";
 import useSaveNewNameHandler from "@/hooks/useSaveNewNameHandler";
+import useUsersHandler from "@/hooks/useUsersHandler";
 
-export default function Register() {
+export default function Manager() {
   const inicialName: IUser = { id: 0, name: "" };
-  const [deleteId, setDeletedId] = useState<number | null>();
   const [editingName, setEditingName] = useState<IUser>(inicialName);
+  const { users } = useUserContext();
+
+  const { loadingList, handleUsers } = useUsersHandler();
+  const { loadingButton, name, setName, newUser } = useNewUserHandler();
+  const { removeUser, deletingId, setDeletingId } = useRemoveUserHandler();
+  const { saveNewName } = useSaveNewNameHandler();
 
   useEffectOnce(() => {
     handleUsers();
   });
-
-  const { loadingList, users, handleUsers } = useUsersHandler();
-  const { loadingButton, name, setName, newUser } = useNewUserHandler();
-  const { removeUser } = useRemoveUserHandler();
-  const { saveNewName } = useSaveNewNameHandler();
 
   return (
     <section className="flex min-h-screen flex-col items-center justify-between p-5 md:p-24">
@@ -61,7 +61,7 @@ export default function Register() {
               .map((value, index) => (
                 <div
                   className={`flex justify-between border border-solid border-black rounded pl-2 ${
-                    value.id === deleteId
+                    value.id === deletingId
                       ? "bg-red-500 text-white"
                       : "bg-white-500 text-black"
                   }`}
@@ -72,7 +72,7 @@ export default function Register() {
                       <input
                         className="bg-transparent border-b border-solid border-gray-400 pl-1"
                         value={
-                          value.id === deleteId
+                          value.id === deletingId
                             ? "Deletando... "
                             : editingName.id === value.id
                             ? editingName.name
@@ -114,7 +114,7 @@ export default function Register() {
                         className="pr-2"
                         onClick={() => {
                           removeUser(value.id);
-                          setDeletedId(value.id);
+                          setDeletingId(value.id);
                         }}
                       >
                         <Image
