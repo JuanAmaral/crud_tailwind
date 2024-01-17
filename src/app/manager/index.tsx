@@ -11,10 +11,14 @@ import useNewUserHandler from "@/hooks/useNewUserHandler";
 import useRemoveUserHandler from "@/hooks/useRemoveUserHandler";
 import useSaveNewNameHandler from "@/hooks/useSaveNewNameHandler";
 import useUsersHandler from "@/hooks/useUsersHandler";
-
+interface EditingNames {
+  [key: number]: {
+    name: string;
+  };
+}
 export default function Manager() {
-  const inicialName: IUser = { id: 0, name: "" };
-  const [editingName, setEditingName] = useState<IUser>(inicialName);
+  const [editingNames, setEditingNames] = useState<EditingNames>({});
+
   const { users } = useUserContext();
 
   const { loadingList, handleUsers } = useUsersHandler();
@@ -74,32 +78,36 @@ export default function Manager() {
                         value={
                           value.id === deletingId
                             ? "Deletando... "
-                            : editingName.id === value.id
-                            ? editingName.name
+                            : editingNames[value.id]?.name !== undefined
+                            ? editingNames[value.id]?.name
                             : value.name
                         }
                         onChange={(e) =>
-                          setEditingName((prevEditingName) => ({
-                            ...prevEditingName,
-                            id: value.id,
-                            name: e.target.value,
+                          setEditingNames((prevEditingNames) => ({
+                            ...prevEditingNames,
+                            [value.id]: { name: e.target.value },
                           }))
                         }
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            saveNewName(value.id, editingName?.name);
+                            saveNewName(value.id, editingNames[value.id]?.name);
                           }
                         }}
-                        onBlur={() => saveNewName(value.id, editingName.name)}
+                        onBlur={() =>
+                          saveNewName(value.id, editingNames[value.id]?.name)
+                        }
                       ></input>
                     </div>
                     <div className="flex">
-                      {value.id == editingName.id &&
-                        editingName.name !== "" && (
+                      {value.id in editingNames &&
+                        editingNames[value.id].name !== undefined && (
                           <button
                             className="pr-2"
                             onClick={() => {
-                              saveNewName(value.id, editingName?.name);
+                              saveNewName(
+                                value.id,
+                                editingNames[value.id].name
+                              );
                             }}
                           >
                             <Image
@@ -107,7 +115,7 @@ export default function Manager() {
                               width={20}
                               height={20}
                               alt="ícone de de lápis"
-                            ></Image>
+                            />
                           </button>
                         )}
                       <button
@@ -122,7 +130,7 @@ export default function Manager() {
                           width={20}
                           height={20}
                           alt="ícone de uma lixeira"
-                        ></Image>
+                        />
                       </button>
                     </div>
                   </>
