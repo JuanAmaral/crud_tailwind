@@ -1,3 +1,7 @@
+Visit the project here: https://crud-wine-two.vercel.app/
+![image](https://github.com/JuanAmaral/crud_tailwind/assets/17573831/b632fff3-9632-4863-bc15-1909e8683c36)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
