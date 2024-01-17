@@ -1,4 +1,4 @@
-import Register from "./pages/register";
+import Register from "./register";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
