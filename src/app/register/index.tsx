@@ -1,12 +1,12 @@
 "use client";
-import { addUser, deleteUser, editUser, getUsers } from "@/app/api/list";
+import { addUser, deleteUser, editUser, getUsers } from "@/api/list";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useEffectOnce } from "usehooks-ts";
 import pencil from "../../../../public/pencil.svg";
 import trash from "../../../../public/trash.svg";
-import LoadingSkeleton from "@/app/styles/components/LoadingSkeleton";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function Register() {
   const inicialName: IUser = { id: 0, name: "" };
