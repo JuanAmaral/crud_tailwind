@@ -1,7 +1,7 @@
 "use client";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEffectOnce } from "usehooks-ts";
 import pencil from "../../../public/pencil.svg";
 import trash from "../../../public/trash.svg";
@@ -11,10 +11,12 @@ import useNewUserHandler from "@/hooks/useNewUserHandler";
 import useRemoveUserHandler from "@/hooks/useRemoveUserHandler";
 import useSaveNewNameHandler from "@/hooks/useSaveNewNameHandler";
 import useUsersHandler from "@/hooks/useUsersHandler";
+import { toast } from "react-toastify";
+
+type EditingNames = { [key: number]: string };
 
 export default function Manager() {
-  const inicialName: IUser = { id: 0, name: "" };
-  const [editingName, setEditingName] = useState<IUser>(inicialName);
+  const [editingNames, setEditingNames] = useState<EditingNames>({});
   const { users } = useUserContext();
 
   const { loadingList, handleUsers } = useUsersHandler();
@@ -25,6 +27,15 @@ export default function Manager() {
   useEffectOnce(() => {
     handleUsers();
   });
+
+  useEffect(() => {
+    const initialEditingNames: { [key: number]: string } = {};
+    users?.forEach((user) => {
+      initialEditingNames[user.id] = user.name;
+    });
+    setEditingNames(initialEditingNames);
+    toast.clearWaitingQueue();
+  }, [users]);
 
   return (
     <section className="flex min-h-screen flex-col items-center justify-between p-5 md:p-24">
@@ -74,32 +85,33 @@ export default function Manager() {
                         value={
                           value.id === deletingId
                             ? "Deletando... "
-                            : editingName.id === value.id
-                            ? editingName.name
+                            : editingNames[value.id] !== undefined
+                            ? editingNames[value.id]
                             : value.name
                         }
                         onChange={(e) =>
-                          setEditingName((prevEditingName) => ({
-                            ...prevEditingName,
-                            id: value.id,
-                            name: e.target.value,
+                          setEditingNames((prevEditingNames) => ({
+                            ...prevEditingNames,
+                            [value.id]: e.target.value,
                           }))
                         }
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            saveNewName(value.id, editingName?.name);
+                            saveNewName(value.id, editingNames[value.id]);
                           }
                         }}
-                        onBlur={() => saveNewName(value.id, editingName.name)}
+                        onBlur={() =>
+                          saveNewName(value.id, editingNames[value.id])
+                        }
                       ></input>
                     </div>
                     <div className="flex">
-                      {value.id == editingName.id &&
-                        editingName.name !== "" && (
+                      {editingNames[value.id] !== undefined &&
+                        editingNames[value.id] !== "" && (
                           <button
                             className="pr-2"
                             onClick={() => {
-                              saveNewName(value.id, editingName?.name);
+                              saveNewName(value.id, editingNames[value.id]);
                             }}
                           >
                             <Image
