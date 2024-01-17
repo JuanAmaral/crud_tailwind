@@ -1,9 +1,23 @@
-import Image from "next/image";
+import Register from "./pages/register";
+import { ToastContainer, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div></div>
+    <main>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        closeOnClick
+        rtl={false}
+        draggable
+        pauseOnHover
+        transition={Slide}
+        theme={"colored"}
+        limit={1}
+      />
+      <Register />
     </main>
   );
 }
