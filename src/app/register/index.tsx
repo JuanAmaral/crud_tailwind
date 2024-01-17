@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useEffectOnce } from "usehooks-ts";
-import pencil from "../../../../public/pencil.svg";
-import trash from "../../../../public/trash.svg";
+import pencil from "../../../public/pencil.svg";
+import trash from "../../../public/trash.svg";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function Register() {
